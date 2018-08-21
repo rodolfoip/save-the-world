@@ -9,7 +9,7 @@ class App extends Component {
     super(props)
     this.state = {
       asteroidsList: [],
-      date: 'yyyy-MM-dd'
+      date: ''
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -36,7 +36,7 @@ class App extends Component {
             Date:
             <input type="date" value={this.state.date} onChange={this.handleChange} name="date"/>
           </label>
-          <ul className={'list-unstyled accordion'}>{this.__dataTable()}</ul>
+          <ul className={'list-unstyled accordion mb-3'}>{this.__dataTable()}</ul>
         </div>
       </div>
     );
