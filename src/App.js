@@ -32,13 +32,11 @@ class App extends Component {
     return (
       <div className="App">
         <div className="container">
-          <form>
-            <label>
-              Date:
-              <input type="date" value={this.state.date} onChange={this.handleChange} name="date"/>
-            </label>
-          </form>
-          <ul className={'list-unstyled'}>{this.__dataTable()}</ul>
+          <label>
+            Date:
+            <input type="date" value={this.state.date} onChange={this.handleChange} name="date"/>
+          </label>
+          <ul className={'list-unstyled accordion'}>{this.__dataTable()}</ul>
         </div>
       </div>
     );
@@ -47,22 +45,53 @@ class App extends Component {
   __dataTable() {
     if (this.state.asteroidsList) {
       let listItems = this.state.asteroidsList.map((item, index) =>
-        <li key={index} className={'mb-3'}>
-          <div>
-            Nome: {item.name}
-          </div>
-          <div>
-            Diametro dessa caralha: {Math.floor(item.estimated_diameter.meters.estimated_diameter_max)} Metros
-          </div>
-          <div>
-            É uma ameaça? {item.is_potentially_hazardous_asteroid ?
-            <span className="badge badge-success">Não</span> :
-            <span className="badge badge-danger">Sim</span>}
-          </div>
+        <li key={index}>{this.__dataCard(item, index)}
         </li>
       )
       return listItems
     }
+  }
+
+  __dataCard(item, index) {
+    let card = <div className="card">
+      <div className="card-header" id={`heading${index}`}>
+        <h5 className="mb-0">
+          <button className="btn btn-link collapsed" type="button" data-toggle="collapse"
+                  data-target={`#collapse${index}`}
+                  aria-expanded="true" aria-controls="collapseOne">
+            Nome: {item.name}
+          </button>
+        </h5>
+      </div>
+
+      <div id={`collapse${index}`} className="collapse show" aria-labelledby={`heading${index}`}
+           data-parent="#accordionExample">
+        <div className="card-body">
+          <div>
+            Diametro dessa caralha: {Math.floor(item.estimated_diameter.meters.estimated_diameter_max)} Metros
+          </div>
+          <div>
+            Distância que vai passar da terra: {item.close_approach_data[0].miss_distance.kilometers} KM
+          </div>
+          <div>
+            É uma ameaça?{this.__isDanger(item.is_potentially_hazardous_asteroid)}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    return card
+  }
+
+  __isDanger(asteroidPotential) {
+    let danger
+    if (asteroidPotential) {
+      danger = <span className="badge badge-danger">Sim</span>
+    } else {
+      danger = <span className="badge badge-success">Não</span>
+    }
+
+    return danger
   }
 }
 
